@@ -32,6 +32,10 @@ ItemLister reads all current creative-mode tabs, so it includes items and block 
 
 The export key only works after a world has loaded. This ensures the creative-tab contents reflect the current client and feature configuration.
 
+## Notice
+
+Most of this mod was generated with AI assistance; I only modified some bugs. Compatibility and stability still need further testing.
+
 ## Development
 
 Build with Java 17:
