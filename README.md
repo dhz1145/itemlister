@@ -30,11 +30,11 @@ The `items` array contains unique item registry IDs, sorted lexicographically:
 
 ItemLister reads all current creative-mode tabs, so it includes items and block items added by other loaded mods when they are visible in the creative inventory. It intentionally exports each item ID only once: stack counts, NBT, enchantments, durability, and other creative-menu variants are not included.
 
-The export key only works after a world has loaded. This ensures the creative-tab contents reflect the current client and feature configuration.
+The export key only works after a world has loaded. This ensures the creative-tab contents reflect the current client and feature configuration. After creating a new world, wait briefly for it to finish loading before exporting so the creative inventory can be traversed successfully.
 
 ## Notice
 
-Most of this mod was generated with AI assistance; I only modified some bugs. Compatibility and stability still need further testing.
+I only wrote part of the code and the overall framework; the rest was completed by Claude.
 
 ## Development
 

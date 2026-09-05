@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -65,7 +66,7 @@ public final class CreativeItemExporter {
 	private static String createJson(List<String> itemIds) {
 		JsonObject root = new JsonObject();
 		root.addProperty("format", "itemlister/1");
-		root.addProperty("minecraftVersion", Minecraft.getInstance().getLaunchedVersion());
+		root.addProperty("minecraftVersion", SharedConstants.getCurrentVersion().getName());
 		root.addProperty("generatedAt", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		root.addProperty("itemCount", itemIds.size());
 
