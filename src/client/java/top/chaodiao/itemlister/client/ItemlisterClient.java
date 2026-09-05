@@ -5,8 +5,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.KeyMapping.Category;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 import top.chaodiao.itemlister.Itemlister;
 
@@ -18,7 +20,7 @@ public class ItemlisterClient implements ClientModInitializer {
 			"key.itemlister.export",
 			InputConstants.Type.KEYSYM,
 			GLFW.GLFW_KEY_UNKNOWN,
-			"category.itemlister"
+			Category.register(Identifier.fromNamespaceAndPath(Itemlister.MOD_ID, "itemlister"))
 	));
 
 	@Override

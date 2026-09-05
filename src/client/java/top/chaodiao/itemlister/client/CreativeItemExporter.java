@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import top.chaodiao.itemlister.Itemlister;
@@ -53,7 +53,7 @@ public final class CreativeItemExporter {
 					continue;
 				}
 
-				ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+				Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
 				if (itemId != null) {
 					itemIds.add(itemId.toString());
 				}
@@ -66,7 +66,7 @@ public final class CreativeItemExporter {
 	private static String createJson(List<String> itemIds) {
 		JsonObject root = new JsonObject();
 		root.addProperty("format", "itemlister/1");
-		root.addProperty("minecraftVersion", SharedConstants.getCurrentVersion().getName());
+		root.addProperty("minecraftVersion", SharedConstants.getCurrentVersion().name());
 		root.addProperty("generatedAt", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		root.addProperty("itemCount", itemIds.size());
 

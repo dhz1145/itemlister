@@ -1,6 +1,6 @@
 # ItemLister
 
-A client-side Fabric mod for Minecraft Java Edition **1.20.1** that exports the item IDs currently available through the creative inventory.
+A client-side Fabric mod for Minecraft Java Edition **1.21.11** that exports the item IDs currently available through the creative inventory.
 
 ## Usage
 
@@ -18,7 +18,7 @@ The `items` array contains unique item registry IDs, sorted lexicographically:
 ```json
 {
   "format": "itemlister/1",
-  "minecraftVersion": "1.20.1",
+  "minecraftVersion": "1.21.11",
   "generatedAt": "2026-09-05T12:34:56+08:00",
   "itemCount": 2,
   "items": [
@@ -38,7 +38,7 @@ I only wrote part of the code and the overall framework; the rest was completed 
 
 ## Development
 
-Build with Java 17:
+Build with Java 21:
 
 ```sh
 ./gradlew build
