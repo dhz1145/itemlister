@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import top.chaodiao.itemlister.Itemlister;
@@ -53,7 +53,7 @@ public final class CreativeItemExporter {
 					continue;
 				}
 
-				Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+				ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
 				if (itemId != null) {
 					itemIds.add(itemId.toString());
 				}
