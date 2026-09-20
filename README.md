@@ -1,6 +1,6 @@
 # ItemLister
 
-A client-side Fabric mod for Minecraft Java Edition **1.21.6–1.21.8** that exports the item IDs currently available through the creative inventory.
+A client-side Fabric mod for Minecraft Java Edition **1.21.6–1.21.8** that exports all registered item and block IDs to a JSON file.
 
 ## Usage
 
@@ -13,24 +13,31 @@ Each file uses a timestamped name such as `2026-09-05_12-34-56_789.json`. Existi
 
 ## Export contents
 
-The `items` array contains unique item registry IDs, sorted lexicographically:
+The `items` and `blocks` arrays contain unique registry IDs, sorted lexicographically:
 
 ```json
 {
-  "format": "itemlister/1",
+  "format": "itemlister/2",
   "minecraftVersion": "1.21.6",
   "generatedAt": "2026-09-05T12:34:56+08:00",
   "itemCount": 2,
+  "blockCount": 2,
   "items": [
-    "examplemod:custom_block",
+    "minecraft:cauldron",
     "minecraft:stone"
+  ],
+  "blocks": [
+    "minecraft:cauldron",
+    "minecraft:water_cauldron"
   ]
 }
 ```
 
-ItemLister reads all current creative-mode tabs, so it includes items and block items added by other loaded mods when they are visible in the creative inventory. It intentionally exports each item ID only once: stack counts, NBT, enchantments, durability, and other creative-menu variants are not included.
+ItemLister reads the item and block registries directly, so it includes everything registered by the vanilla game and by other loaded mods. Because the two registries are independent, an ID can appear in both arrays, and blocks without a corresponding item (such as `minecraft:water_cauldron`) appear only in `blocks`.
 
-The export key only works after a world has loaded. This ensures the creative-tab contents reflect the current client and feature configuration. After creating a new world, wait briefly for it to finish loading before exporting so the creative inventory can be traversed successfully. If no items are detected, open your inventory once and try exporting again.
+Each ID is exported only once: stack counts, NBT, enchantments, durability, and other variants are not included.
+
+The export key only works after a world has loaded. If no IDs are detected, open your inventory once and try exporting again.
 
 ## Notice
 
