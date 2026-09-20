@@ -32,12 +32,12 @@ public class ItemlisterClient implements ClientModInitializer {
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (EXPORT_KEY.consumeClick()) {
-				exportCreativeItemIds(client);
+				exportItemIds(client);
 			}
 		});
 	}
 
-	private static void exportCreativeItemIds(Minecraft client) {
+	private static void exportItemIds(Minecraft client) {
 		if (client.player == null || client.level == null) {
 			Itemlister.LOGGER.warn("Skipped item export because no world is currently loaded.");
 			return;
@@ -47,12 +47,14 @@ public class ItemlisterClient implements ClientModInitializer {
 			CreativeItemExporter.ExportResult result = CreativeItemExporter.export(client);
 			Path relativePath = client.gameDirectory.toPath().relativize(result.outputFile());
 			client.player.sendSystemMessage(
-					Component.literal("已导出 " + result.itemCount() + " 个物品 ID 到 " + relativePath)
+					Component.literal("已导出 " + result.itemCount() + " 个物品 ID 和 "
+							+ result.blockCount() + " 个方块 ID 到 " + relativePath)
 			);
-			Itemlister.LOGGER.info("Exported {} creative item IDs to {}", result.itemCount(), result.outputFile());
+			Itemlister.LOGGER.info("Exported {} item IDs and {} block IDs to {}",
+					result.itemCount(), result.blockCount(), result.outputFile());
 		} catch (IOException | RuntimeException exception) {
 			client.player.sendSystemMessage(Component.literal("导出物品 ID 失败，请查看日志。"));
-			Itemlister.LOGGER.error("Failed to export creative item IDs.", exception);
+			Itemlister.LOGGER.error("Failed to export item IDs.", exception);
 		}
 	}
 }
