@@ -6,11 +6,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import top.chaodiao.itemlister.Itemlister;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -34,48 +32,47 @@ public final class CreativeItemExporter {
 	}
 
 	public static ExportResult export(Minecraft client) throws IOException {
-		List<String> itemIds = collectCreativeItemIds();
+		List<String> itemIds = collectRegisteredIds(BuiltInRegistries.ITEM);
+		List<String> blockIds = collectRegisteredIds(BuiltInRegistries.BLOCK);
 		Path outputDirectory = client.gameDirectory.toPath().resolve("itemlist");
 		Files.createDirectories(outputDirectory);
 
 		String timestamp = FILE_NAME_TIME_FORMAT.format(OffsetDateTime.now());
-		String json = createJson(itemIds);
+		String json = createJson(itemIds, blockIds);
 		Path outputFile = writeNewFile(outputDirectory, timestamp, json);
-		return new ExportResult(outputFile, itemIds.size());
+		return new ExportResult(outputFile, itemIds.size(), blockIds.size());
 	}
 
-	private static List<String> collectCreativeItemIds() {
-		Set<String> itemIds = new TreeSet<>();
+	private static <T> List<String> collectRegisteredIds(Registry<T> registry) {
+		Set<String> ids = new TreeSet<>();
 
-		for (CreativeModeTab tab : BuiltInRegistries.CREATIVE_MODE_TAB) {
-			for (ItemStack stack : tab.getDisplayItems()) {
-				if (stack.isEmpty()) {
-					continue;
-				}
-
-				Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
-				if (itemId != null) {
-					itemIds.add(itemId.toString());
-				}
-			}
+		for (Identifier id : registry.keySet()) {
+			ids.add(id.toString());
 		}
 
-		return new ArrayList<>(itemIds);
+		return new ArrayList<>(ids);
 	}
 
-	private static String createJson(List<String> itemIds) {
+	private static String createJson(List<String> itemIds, List<String> blockIds) {
 		JsonObject root = new JsonObject();
-		root.addProperty("format", "itemlister/1");
+		root.addProperty("format", "itemlister/2");
 		root.addProperty("minecraftVersion", SharedConstants.getCurrentVersion().name());
 		root.addProperty("generatedAt", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		root.addProperty("itemCount", itemIds.size());
-
-		JsonArray items = new JsonArray();
-		for (String itemId : itemIds) {
-			items.add(itemId);
-		}
-		root.add("items", items);
+		root.addProperty("blockCount", blockIds.size());
+		root.add("items", toJsonArray(itemIds));
+		root.add("blocks", toJsonArray(blockIds));
 		return GSON.toJson(root) + System.lineSeparator();
+	}
+
+	private static JsonArray toJsonArray(List<String> ids) {
+		JsonArray array = new JsonArray();
+
+		for (String id : ids) {
+			array.add(id);
+		}
+
+		return array;
 	}
 
 	private static Path writeNewFile(Path outputDirectory, String timestamp, String json) throws IOException {
@@ -93,6 +90,6 @@ public final class CreativeItemExporter {
 		throw new IOException("Could not create a unique export file in " + outputDirectory);
 	}
 
-	public record ExportResult(Path outputFile, int itemCount) {
+	public record ExportResult(Path outputFile, int itemCount, int blockCount) {
 	}
 }
