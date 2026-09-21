@@ -42,12 +42,15 @@ public class ItemlisterClient implements ClientModInitializer {
 			CreativeItemExporter.ExportResult result = CreativeItemExporter.export(client);
 			Path relativePath = client.gameDirectory.toPath().relativize(result.outputFile());
 			client.player.displayClientMessage(
-					Component.literal("已导出 " + result.itemCount() + " 个物品 ID 和 "
-							+ result.blockCount() + " 个方块 ID 到 " + relativePath),
+					Component.literal("已导出 " + result.itemCount() + " 个物品 ID、"
+							+ result.blockCount() + " 个方块 ID、"
+							+ result.blockEntityCount() + " 个方块实体类型和 "
+							+ result.entityCount() + " 个实体 ID 到 " + relativePath),
 					false
 			);
-			Itemlister.LOGGER.info("Exported {} item IDs and {} block IDs to {}",
-					result.itemCount(), result.blockCount(), result.outputFile());
+			Itemlister.LOGGER.info("Exported {} item IDs, {} block IDs, {} block entity types and {} entity IDs to {}",
+					result.itemCount(), result.blockCount(), result.blockEntityCount(), result.entityCount(),
+					result.outputFile());
 		} catch (IOException | RuntimeException exception) {
 			client.player.displayClientMessage(Component.literal("导出物品 ID 失败，请查看日志。"), false);
 			Itemlister.LOGGER.error("Failed to export item IDs.", exception);
