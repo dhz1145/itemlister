@@ -1,6 +1,6 @@
 # ItemLister
 
-A client-side Fabric mod for Minecraft Java Edition **1.21.6–1.21.8** that exports all registered item and block IDs to a JSON file.
+A client-side Fabric mod for Minecraft Java Edition **1.21.6–1.21.8** that exports all registered item, block, block entity type and entity type IDs to a JSON file.
 
 ## Usage
 
@@ -13,7 +13,7 @@ Each file uses a timestamped name such as `2026-09-05_12-34-56_789.json`. Existi
 
 ## Export contents
 
-The `items` and `blocks` arrays contain unique registry IDs, sorted lexicographically:
+The `items`, `blocks`, `blockEntities` and `entities` arrays contain unique registry IDs, sorted lexicographically:
 
 ```json
 {
@@ -22,6 +22,8 @@ The `items` and `blocks` arrays contain unique registry IDs, sorted lexicographi
   "generatedAt": "2026-09-05T12:34:56+08:00",
   "itemCount": 2,
   "blockCount": 2,
+  "blockEntityCount": 2,
+  "entityCount": 2,
   "items": [
     "minecraft:cauldron",
     "minecraft:stone"
@@ -29,11 +31,19 @@ The `items` and `blocks` arrays contain unique registry IDs, sorted lexicographi
   "blocks": [
     "minecraft:cauldron",
     "minecraft:water_cauldron"
+  ],
+  "blockEntities": [
+    "minecraft:chest",
+    "minecraft:furnace"
+  ],
+  "entities": [
+    "minecraft:pig",
+    "minecraft:zombie"
   ]
 }
 ```
 
-ItemLister reads the item and block registries directly, so it includes everything registered by the vanilla game and by other loaded mods. Because the two registries are independent, an ID can appear in both arrays, and blocks without a corresponding item (such as `minecraft:water_cauldron`) appear only in `blocks`.
+ItemLister reads the item, block, block entity type and entity type registries directly, so it includes everything registered by the vanilla game and by other loaded mods. Because the registries are independent, an ID can appear in more than one array, and entries without a corresponding item (such as `minecraft:water_cauldron`) appear only in their own array.
 
 Each ID is exported only once: stack counts, NBT, enchantments, durability, and other variants are not included.
 
