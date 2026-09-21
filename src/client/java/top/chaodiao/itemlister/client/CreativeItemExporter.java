@@ -34,13 +34,15 @@ public final class CreativeItemExporter {
 	public static ExportResult export(Minecraft client) throws IOException {
 		List<String> itemIds = collectRegisteredIds(BuiltInRegistries.ITEM);
 		List<String> blockIds = collectRegisteredIds(BuiltInRegistries.BLOCK);
+		List<String> blockEntityIds = collectRegisteredIds(BuiltInRegistries.BLOCK_ENTITY_TYPE);
+		List<String> entityIds = collectRegisteredIds(BuiltInRegistries.ENTITY_TYPE);
 		Path outputDirectory = client.gameDirectory.toPath().resolve("itemlist");
 		Files.createDirectories(outputDirectory);
 
 		String timestamp = FILE_NAME_TIME_FORMAT.format(OffsetDateTime.now());
-		String json = createJson(itemIds, blockIds);
+		String json = createJson(itemIds, blockIds, blockEntityIds, entityIds);
 		Path outputFile = writeNewFile(outputDirectory, timestamp, json);
-		return new ExportResult(outputFile, itemIds.size(), blockIds.size());
+		return new ExportResult(outputFile, itemIds.size(), blockIds.size(), blockEntityIds.size(), entityIds.size());
 	}
 
 	private static <T> List<String> collectRegisteredIds(Registry<T> registry) {
@@ -53,15 +55,20 @@ public final class CreativeItemExporter {
 		return new ArrayList<>(ids);
 	}
 
-	private static String createJson(List<String> itemIds, List<String> blockIds) {
+	private static String createJson(List<String> itemIds, List<String> blockIds,
+			List<String> blockEntityIds, List<String> entityIds) {
 		JsonObject root = new JsonObject();
 		root.addProperty("format", "itemlister/2");
 		root.addProperty("minecraftVersion", SharedConstants.getCurrentVersion().getName());
 		root.addProperty("generatedAt", OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
 		root.addProperty("itemCount", itemIds.size());
 		root.addProperty("blockCount", blockIds.size());
+		root.addProperty("blockEntityCount", blockEntityIds.size());
+		root.addProperty("entityCount", entityIds.size());
 		root.add("items", toJsonArray(itemIds));
 		root.add("blocks", toJsonArray(blockIds));
+		root.add("blockEntities", toJsonArray(blockEntityIds));
+		root.add("entities", toJsonArray(entityIds));
 		return GSON.toJson(root) + System.lineSeparator();
 	}
 
@@ -90,6 +97,7 @@ public final class CreativeItemExporter {
 		throw new IOException("Could not create a unique export file in " + outputDirectory);
 	}
 
-	public record ExportResult(Path outputFile, int itemCount, int blockCount) {
+	public record ExportResult(Path outputFile, int itemCount, int blockCount,
+			int blockEntityCount, int entityCount) {
 	}
 }
