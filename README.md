@@ -1,6 +1,6 @@
 # ItemLister
 
-A client-side Fabric mod for Minecraft Java Edition **1.20.1** that exports all registered item, block, block entity type and entity type IDs to a JSON file.
+A client-side Fabric mod for Minecraft Java Edition **1.20.1** that exports all registered item, block, block entity type, entity type and fluid IDs to a JSON file.
 
 ## Usage
 
@@ -13,7 +13,7 @@ Each file uses a timestamped name such as `2026-09-05_12-34-56_789.json`. Existi
 
 ## Export contents
 
-The `items`, `blocks`, `blockEntities` and `entities` arrays contain unique registry IDs, sorted lexicographically:
+The `items`, `blocks`, `blockEntities`, `entities` and `fluids` arrays contain unique registry IDs, sorted lexicographically:
 
 ```json
 {
@@ -24,6 +24,7 @@ The `items`, `blocks`, `blockEntities` and `entities` arrays contain unique regi
   "blockCount": 2,
   "blockEntityCount": 2,
   "entityCount": 2,
+  "fluidCount": 2,
   "items": [
     "minecraft:cauldron",
     "minecraft:stone"
@@ -39,11 +40,15 @@ The `items`, `blocks`, `blockEntities` and `entities` arrays contain unique regi
   "entities": [
     "minecraft:pig",
     "minecraft:zombie"
+  ],
+  "fluids": [
+    "minecraft:empty",
+    "minecraft:water"
   ]
 }
 ```
 
-ItemLister reads the item, block, block entity type and entity type registries directly, so it includes everything registered by the vanilla game and by other loaded mods. Because the registries are independent, an ID can appear in more than one array, and entries without a corresponding item (such as `minecraft:water_cauldron`) appear only in their own array.
+ItemLister reads the item, block, block entity type, entity type and fluid registries directly, so it includes everything registered by the vanilla game and by other loaded mods. Because the registries are independent, an ID can appear in more than one array, and entries without a corresponding item (such as `minecraft:water_cauldron`) appear only in their own array.
 
 Each ID is exported only once: stack counts, NBT, enchantments, durability, and other variants are not included.
 
