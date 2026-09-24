@@ -36,13 +36,15 @@ public final class CreativeItemExporter {
 		List<String> blockIds = collectRegisteredIds(BuiltInRegistries.BLOCK);
 		List<String> blockEntityIds = collectRegisteredIds(BuiltInRegistries.BLOCK_ENTITY_TYPE);
 		List<String> entityIds = collectRegisteredIds(BuiltInRegistries.ENTITY_TYPE);
+		List<String> fluidIds = collectRegisteredIds(BuiltInRegistries.FLUID);
 		Path outputDirectory = client.gameDirectory.toPath().resolve("itemlist");
 		Files.createDirectories(outputDirectory);
 
 		String timestamp = FILE_NAME_TIME_FORMAT.format(OffsetDateTime.now());
-		String json = createJson(itemIds, blockIds, blockEntityIds, entityIds);
+		String json = createJson(itemIds, blockIds, blockEntityIds, entityIds, fluidIds);
 		Path outputFile = writeNewFile(outputDirectory, timestamp, json);
-		return new ExportResult(outputFile, itemIds.size(), blockIds.size(), blockEntityIds.size(), entityIds.size());
+		return new ExportResult(outputFile, itemIds.size(), blockIds.size(), blockEntityIds.size(),
+				entityIds.size(), fluidIds.size());
 	}
 
 	private static <T> List<String> collectRegisteredIds(Registry<T> registry) {
@@ -56,7 +58,7 @@ public final class CreativeItemExporter {
 	}
 
 	private static String createJson(List<String> itemIds, List<String> blockIds,
-			List<String> blockEntityIds, List<String> entityIds) {
+			List<String> blockEntityIds, List<String> entityIds, List<String> fluidIds) {
 		JsonObject root = new JsonObject();
 		root.addProperty("format", "itemlister/2");
 		root.addProperty("minecraftVersion", SharedConstants.getCurrentVersion().name());
@@ -65,10 +67,12 @@ public final class CreativeItemExporter {
 		root.addProperty("blockCount", blockIds.size());
 		root.addProperty("blockEntityCount", blockEntityIds.size());
 		root.addProperty("entityCount", entityIds.size());
+		root.addProperty("fluidCount", fluidIds.size());
 		root.add("items", toJsonArray(itemIds));
 		root.add("blocks", toJsonArray(blockIds));
 		root.add("blockEntities", toJsonArray(blockEntityIds));
 		root.add("entities", toJsonArray(entityIds));
+		root.add("fluids", toJsonArray(fluidIds));
 		return GSON.toJson(root) + System.lineSeparator();
 	}
 
@@ -98,6 +102,6 @@ public final class CreativeItemExporter {
 	}
 
 	public record ExportResult(Path outputFile, int itemCount, int blockCount,
-			int blockEntityCount, int entityCount) {
+			int blockEntityCount, int entityCount, int fluidCount) {
 	}
 }
